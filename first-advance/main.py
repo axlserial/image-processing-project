@@ -1,6 +1,6 @@
 from os import listdir, path
 from skimage import io, exposure, color
-
+import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.gridspec as gridspec
 
@@ -33,7 +33,7 @@ def main():
 
         # Layout de la figura
         plt.figure(figsize=(10, 8))
-        gs = gridspec.GridSpec(2, 2, hspace=0.3)
+        gs = gridspec.GridSpec(3, 2, hspace=0.3)
 
         # Título de la figura
         plt.suptitle(f"Histogramas y ecualizado de la imagen {i}", y=0.95, fontsize=14)
@@ -58,8 +58,24 @@ def main():
         ax.set_xlabel("Original", fontsize=10)
 
         # --/ Mostramos la imagen ecualizada
-        ax = plt.subplot(gs[1, 1])
+        ax = plt.subplot(gs[2, 0])
         ax.imshow(exposure.equalize_hist(image_gray), cmap="gray")
+        ax.set_xlabel("Ecualizada", fontsize=10)
+
+        # Ecualización de histograma de la imagen en RGB
+
+        # --/ Mostramos la imagen original en RGB
+        ax = plt.subplot(gs[1, 1])
+        ax.imshow(image)
+        ax.set_xlabel("Original", fontsize=10)
+
+        img_r = exposure.equalize_hist(image[:,:,0])
+        img_g = exposure.equalize_hist(image[:,:,1])
+        img_b = exposure.equalize_hist(image[:,:,2])
+
+        # --/ Mostramos la imagen ecualizada
+        ax = plt.subplot(gs[2, 1])
+        ax.imshow(np.concatenate((img_r[..., np.newaxis], img_g[..., np.newaxis], img_b[..., np.newaxis]), axis=-1))
         ax.set_xlabel("Ecualizada", fontsize=10)
 
     # Mostramos las gráficas
