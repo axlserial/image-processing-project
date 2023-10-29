@@ -32,23 +32,35 @@ def main():
         hist_bn, bins_bn = exposure.histogram(image_gray)
 
         # Layout de la figura
-        plt.figure(figsize=(10, 6))
-        gs = gridspec.GridSpec(2, 1)
+        plt.figure(figsize=(10, 8))
+        gs = gridspec.GridSpec(2, 2, hspace=0.3)
 
         # Título de la figura
-        plt.suptitle(f"Histogramas de la imagen {i}", y=0.95, fontsize=14)
+        plt.suptitle(f"Histogramas y ecualizado de la imagen {i}", y=0.95, fontsize=14)
 
         # Histograma de la imagen en escala de grises
-        ax = plt.subplot(gs[0])
+        ax = plt.subplot(gs[0, 0])
         ax.plot(bins_bn, hist_bn, color="k")
         ax.set_title("Escala de grises", y=1.0, pad=-14, fontsize=10)
 
         # Histogramas de la imagen para cada canal de color
-        ax = plt.subplot(gs[1])
+        ax = plt.subplot(gs[0, 1])
         ax.plot(bins_r, hist_r, color="r")
         ax.plot(bins_g, hist_g, color="g")
         ax.plot(bins_b, hist_b, color="b")
         ax.set_title("RGB", y=1.0, pad=-14, fontsize=10)
+
+        # Ecualización de histograma de la imagen en escala de grises
+        
+        # --/ Mostramos la imagen original
+        ax = plt.subplot(gs[1, 0])
+        ax.imshow(image_gray, cmap="gray")
+        ax.set_xlabel("Original", fontsize=10)
+
+        # --/ Mostramos la imagen ecualizada
+        ax = plt.subplot(gs[1, 1])
+        ax.imshow(exposure.equalize_hist(image_gray), cmap="gray")
+        ax.set_xlabel("Ecualizada", fontsize=10)
 
     # Mostramos las gráficas
     plt.show()
