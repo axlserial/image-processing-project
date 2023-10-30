@@ -3,6 +3,7 @@ from skimage import io, exposure, color
 import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.gridspec as gridspec
+from os.path import basename
 
 
 def read_images(path: str):
@@ -10,7 +11,7 @@ def read_images(path: str):
 
     for file in listdir(path):
         img = io.imread(f"{path}/{file}")
-        yield img
+        yield img, file
 
 
 def main():
@@ -21,7 +22,7 @@ def main():
     images = read_images(path.join(dir_path, "images"))
 
     # Mostramos la ecualización de histograma de las imágenes
-    for i, image in enumerate(images, start=1):
+    for image, file in images:
         # Convertimos la imagen a escala de grises
         image_gray = color.rgb2gray(image)
 
@@ -36,7 +37,8 @@ def main():
         gs = gridspec.GridSpec(3, 2, hspace=0.3)
 
         # Título de la figura
-        plt.suptitle(f"Histogramas y ecualizado de la imagen {i}", y=0.95, fontsize=14)
+        #plt.suptitle(f"Histogramas y ecualizado de la imagen {i}", y=0.95, fontsize=14)
+        plt.suptitle(f"Histogramas y ecualizado de la imagen {path.basename(file)}", y=0.95, fontsize=12)
 
         # Histograma de la imagen en escala de grises
         ax = plt.subplot(gs[0, 0])

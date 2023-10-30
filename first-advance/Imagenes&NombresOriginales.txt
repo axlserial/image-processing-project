@@ -1,0 +1,11 @@
+Late-Blight-1: Late-Blight-85-_JPG.rf.bdd244b26a0a7a282295135e60f96a3d
+Late-Blight-2: Late-Blight-187-_JPG.rf.72d1c4389a96dbe8edced6b8c211b836
+Late-Blight-3: Late-Blight-350-_JPG.rf.92fcfa3df53641dd2aad63dbe5530257
+Late-Blight-4: Late-Blight-812-_JPG.rf.661003f1c75de99a79588854e3a23ad0
+Late-Blight-5: Late-Blight-831-_JPG.rf.0969dcfb08ad8c58c909441691cbf8fe
+
+Septoria-Leaf-Spot-1: Septoria-Leaf-Spot-13-_JPG_jpg.rf.07c0f8fcf8585c8cbe0f70fb0f5e454b
+Septoria-Leaf-Spot-2: Septoria-Leaf-Spot-58-_JPG_jpg.rf.0b1cd893c005c3ce884e9ef8c4a2c2fd
+Septoria-Leaf-Spot-3: Septoria-Leaf-Spot-219-_JPG_jpg.rf.35fece3d6aaddf6245dfb23923eb6e7f
+Septoria-Leaf-Spot-4: Septoria-Leaf-Spot-228-_JPG_jpg.rf.61dae35c5d2e7f5e5cb9077133d7324b
+Septoria-Leaf-Spot-5: Septoria-Leaf-Spot-239-_JPG_jpg.rf.64cc107df4108177bf48e20affe6d012
