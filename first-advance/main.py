@@ -3,7 +3,6 @@ from skimage import io, exposure, color
 import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.gridspec as gridspec
-from os.path import basename
 
 
 def read_images(path: str):
@@ -37,23 +36,27 @@ def main():
         gs = gridspec.GridSpec(3, 2, hspace=0.3)
 
         # Título de la figura
-        #plt.suptitle(f"Histogramas y ecualizado de la imagen {i}", y=0.95, fontsize=14)
-        plt.suptitle(f"Histogramas y ecualizado de la imagen {path.basename(file)}", y=0.95, fontsize=12)
+        # plt.suptitle(f"Histogramas y ecualizado de la imagen {i}", y=0.95, fontsize=14)
+        plt.suptitle(
+            f"Histogramas y ecualizado de la imagen {path.basename(file)}",
+            y=0.96,
+            fontsize=14,
+        )
 
         # Histograma de la imagen en escala de grises
         ax = plt.subplot(gs[0, 0])
         ax.plot(bins_bn, hist_bn, color="k")
-        ax.set_title("Escala de grises", y=1.0, pad=-14, fontsize=10)
+        ax.set_title("Escala de grises", fontsize=10)
 
         # Histogramas de la imagen para cada canal de color
         ax = plt.subplot(gs[0, 1])
         ax.plot(bins_r, hist_r, color="r")
         ax.plot(bins_g, hist_g, color="g")
         ax.plot(bins_b, hist_b, color="b")
-        ax.set_title("RGB", y=1.0, pad=-14, fontsize=10)
+        ax.set_title("RGB", fontsize=10)
 
         # Ecualización de histograma de la imagen en escala de grises
-        
+
         # --/ Mostramos la imagen original
         ax = plt.subplot(gs[1, 0])
         ax.imshow(image_gray, cmap="gray")
@@ -71,13 +74,22 @@ def main():
         ax.imshow(image)
         ax.set_xlabel("Original", fontsize=10)
 
-        img_r = exposure.equalize_hist(image[:,:,0])
-        img_g = exposure.equalize_hist(image[:,:,1])
-        img_b = exposure.equalize_hist(image[:,:,2])
+        img_r = exposure.equalize_hist(image[:, :, 0])
+        img_g = exposure.equalize_hist(image[:, :, 1])
+        img_b = exposure.equalize_hist(image[:, :, 2])
 
         # --/ Mostramos la imagen ecualizada
         ax = plt.subplot(gs[2, 1])
-        ax.imshow(np.concatenate((img_r[..., np.newaxis], img_g[..., np.newaxis], img_b[..., np.newaxis]), axis=-1))
+        ax.imshow(
+            np.concatenate(
+                (
+                    img_r[..., np.newaxis],
+                    img_g[..., np.newaxis],
+                    img_b[..., np.newaxis],
+                ),
+                axis=-1,
+            )
+        )
         ax.set_xlabel("Ecualizada", fontsize=10)
 
     # Mostramos las gráficas
