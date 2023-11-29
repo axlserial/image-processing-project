@@ -3,6 +3,7 @@ import skimage as ski
 import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.gridspec as gridspec
+from skimage import filters
 
 
 def read_images(path: str):
@@ -17,8 +18,9 @@ def main():
     # Obtenemos la ruta absoluta del archivo actual
     dir_path = path.dirname(path.realpath(__file__))
 
+
     # Leemos las imágenes
-    images = read_images(path.join(dir_path, "imagenes"))
+    images = read_images(path.join(dir_path, "early_blight"))
 
     # Mostramos la ecualización de histograma de las imágenes
     for image, file in images:
@@ -28,17 +30,12 @@ def main():
 
         equalized = ski.exposure.equalize_hist(image_gray)
 
-        # Filtro para reducir sal y pimienta (mediana)
-        median_filtered = ski.filters.median(image_gray)
+        # Filtro gaussiano para reducir el ruido y suavizar la imagen
+        img_smooth = filters.gaussian(image_gray, sigma=2)
 
-        # Filtro para reducir pimienta (maximo)
-        max_filtered = ski.filters.rank.maximum(image_gray, ski.morphology.disk(3))
+        # Detectamos los bordes de la imagen Sobel
+        edges = filters.prewitt(img_smooth)
 
-        # Filtro para reducir sal (minimo)
-        min_filtered = ski.filters.rank.minimum(image_gray, ski.morphology.disk(3))
-
-        # Filtro
-        sobel_filtered = ski.filters.sobel(ski.filters.median(equalized))
 
         # Mostrar resultados
         plt.figure()
@@ -49,25 +46,16 @@ def main():
             fontsize=14,
         )
 
-        plt.subplot(2, 3, 1)
+        plt.subplot(1, 2, 1)
         plt.imshow(image, cmap=plt.cm.gray)
         plt.title("Original")
 
-        plt.subplot(2, 3, 2)
-        plt.imshow(median_filtered, cmap=plt.cm.gray)
-        plt.title("Mediana")
+        plt.subplot(1, 2, 2)
+        plt.imshow(img_smooth, cmap=plt.cm.gray)
+        plt.title("Gaussiano")
 
-        plt.subplot(2, 3, 3)
-        plt.imshow(sobel_filtered, cmap=plt.cm.gray)
-        plt.title("Sobel")
 
-        plt.subplot(2, 3, 4)
-        plt.imshow(min_filtered, cmap=plt.cm.gray)
-        plt.title("Minimo")
 
-        plt.subplot(2, 3, 5)
-        plt.imshow(max_filtered, cmap=plt.cm.gray)
-        plt.title("Maximo")
 
     plt.show()
 

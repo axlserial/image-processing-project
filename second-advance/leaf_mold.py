@@ -18,27 +18,23 @@ def main():
     dir_path = path.dirname(path.realpath(__file__))
 
     # Leemos las imágenes
-    images = read_images(path.join(dir_path, "imagenes"))
+    images = read_images(path.join(dir_path, "leaf_mold"))
 
     # Mostramos la ecualización de histograma de las imágenes
     for image, file in images:
         # Convertimos la imagen a escala de grises
         image_gray = ski.color.rgb2gray(image)
-        image_gray = ski.util.img_as_ubyte(image_gray)
+        #image_gray = ski.util.img_as_ubyte(image_gray)
 
-        equalized = ski.exposure.equalize_hist(image_gray)
+        gauss = ski.filters.gaussian(image_gray,sigma=2.0)
 
         # Filtro para reducir sal y pimienta (mediana)
-        median_filtered = ski.filters.median(image_gray)
+        median_filtered = ski.exposure.adjust_gamma(gauss, gamma=1.5)
 
-        # Filtro para reducir pimienta (maximo)
-        max_filtered = ski.filters.rank.maximum(image_gray, ski.morphology.disk(3))
+        median = ski.filters.median(image_gray)
+        threshold_value = ski.filters.threshold_otsu(median)
+        otsu_filtered_image = median <= threshold_value        
 
-        # Filtro para reducir sal (minimo)
-        min_filtered = ski.filters.rank.minimum(image_gray, ski.morphology.disk(3))
-
-        # Filtro
-        sobel_filtered = ski.filters.sobel(ski.filters.median(equalized))
 
         # Mostrar resultados
         plt.figure()
@@ -49,25 +45,18 @@ def main():
             fontsize=14,
         )
 
-        plt.subplot(2, 3, 1)
+        plt.subplot(1, 3, 1)
         plt.imshow(image, cmap=plt.cm.gray)
         plt.title("Original")
 
-        plt.subplot(2, 3, 2)
+        plt.subplot(1, 3, 2)
         plt.imshow(median_filtered, cmap=plt.cm.gray)
-        plt.title("Mediana")
+        plt.title("Gamma 1.5")
 
-        plt.subplot(2, 3, 3)
-        plt.imshow(sobel_filtered, cmap=plt.cm.gray)
-        plt.title("Sobel")
+        plt.subplot(1, 3, 3)
+        plt.imshow(otsu_filtered_image, cmap=plt.cm.gray)
+        plt.title("Bordes")
 
-        plt.subplot(2, 3, 4)
-        plt.imshow(min_filtered, cmap=plt.cm.gray)
-        plt.title("Minimo")
-
-        plt.subplot(2, 3, 5)
-        plt.imshow(max_filtered, cmap=plt.cm.gray)
-        plt.title("Maximo")
 
     plt.show()
 

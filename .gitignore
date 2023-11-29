@@ -134,3 +134,18 @@ __pycache__/
 # vscode
 .vscode/
 /Scripts/
+
+
+# Imagenes
+second-advance/early_blight/
+second-advance/imagenes/
+second-advance/late_blight/
+second-advance/leaf_miner/
+second-advance/leaf_mold/
+second-advance/mosaic_virus/
+second-advance/septoria/
+second-advance/spider_mites/
+second-advance/yellow_leaf_curl_virus/
+
+
+

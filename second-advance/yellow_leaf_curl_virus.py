@@ -18,27 +18,27 @@ def main():
     dir_path = path.dirname(path.realpath(__file__))
 
     # Leemos las imágenes
-    images = read_images(path.join(dir_path, "imagenes"))
+    images = read_images(path.join(dir_path, "yellow_leaf_curl_virus"))
 
     # Mostramos la ecualización de histograma de las imágenes
     for image, file in images:
         # Convertimos la imagen a escala de grises
         image_gray = ski.color.rgb2gray(image)
-        image_gray = ski.util.img_as_ubyte(image_gray)
+        #image_gray = ski.util.img_as_ubyte(image_gray)
 
+        edge = ski.feature.canny(image_gray)
         equalized = ski.exposure.equalize_hist(image_gray)
 
-        # Filtro para reducir sal y pimienta (mediana)
-        median_filtered = ski.filters.median(image_gray)
+        median_filtered = ski.exposure.adjust_gamma(equalized, gamma=2)
 
-        # Filtro para reducir pimienta (maximo)
-        max_filtered = ski.filters.rank.maximum(image_gray, ski.morphology.disk(3))
-
-        # Filtro para reducir sal (minimo)
-        min_filtered = ski.filters.rank.minimum(image_gray, ski.morphology.disk(3))
+        image_filtered = ski.filters.median(median_filtered)
 
         # Filtro
-        sobel_filtered = ski.filters.sobel(ski.filters.median(equalized))
+        sobel_filtered = ski.filters.sobel(ski.filters.median(image_filtered))
+
+
+        th = ski.filters.threshold_otsu(image_gray)
+        b = image_gray > th
 
         # Mostrar resultados
         plt.figure()
@@ -55,19 +55,18 @@ def main():
 
         plt.subplot(2, 3, 2)
         plt.imshow(median_filtered, cmap=plt.cm.gray)
-        plt.title("Mediana")
+        plt.title("Gamma 1.5")
 
         plt.subplot(2, 3, 3)
         plt.imshow(sobel_filtered, cmap=plt.cm.gray)
         plt.title("Sobel")
 
-        plt.subplot(2, 3, 4)
-        plt.imshow(min_filtered, cmap=plt.cm.gray)
-        plt.title("Minimo")
 
-        plt.subplot(2, 3, 5)
-        plt.imshow(max_filtered, cmap=plt.cm.gray)
-        plt.title("Maximo")
+        plt.subplot(2, 3, 4)
+        plt.imshow(edge, cmap=plt.cm.gray)
+        plt.title("TH")
+
+
 
     plt.show()
 

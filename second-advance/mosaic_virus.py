@@ -18,7 +18,7 @@ def main():
     dir_path = path.dirname(path.realpath(__file__))
 
     # Leemos las imágenes
-    images = read_images(path.join(dir_path, "imagenes"))
+    images = read_images(path.join(dir_path, "mosaic_virus"))
 
     # Mostramos la ecualización de histograma de las imágenes
     for image, file in images:
