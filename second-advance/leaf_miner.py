@@ -31,8 +31,12 @@ def main():
         # Filtro para reducir sal y pimienta (mediana)
         median_filtered = ski.filters.median(image_gray)
 
-        th = ski.filters.threshold_otsu(image_gray)
-        b = image_gray > th
+        th_otsu = ski.filters.threshold_otsu(image_gray)
+        borde = image_gray > th_otsu 
+
+        median = ski.filters.median(image_gray)
+        threshold_value = ski.filters.threshold_otsu(median)
+        otsu_filtered_image = median <= threshold_value     
 
 
         # Mostrar resultados
@@ -44,17 +48,21 @@ def main():
             fontsize=14,
         )
 
-        plt.subplot(1, 3, 1)
+        plt.subplot(2, 3, 1)
         plt.imshow(image, cmap=plt.cm.gray)
         plt.title("Original")
 
-        plt.subplot(1, 3, 2)
+        plt.subplot(2, 3, 2)
         plt.imshow(median_filtered, cmap=plt.cm.gray)
         plt.title("Mediana")
 
-        plt.subplot(1, 3, 3)
-        plt.imshow(b, cmap=plt.cm.gray)
-        plt.title("threshold_otsu")
+        plt.subplot(2, 3, 3)
+        plt.imshow(borde, cmap=plt.cm.gray)
+        plt.title("Bordes")
+
+        plt.subplot(2, 3, 4)
+        plt.imshow(otsu_filtered_image, cmap=plt.cm.gray)
+        plt.title("Bordes con mediana")
 
 
     plt.show()

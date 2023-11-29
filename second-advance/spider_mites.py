@@ -30,6 +30,11 @@ def main():
 
         median_filtered = ski.exposure.adjust_gamma(equalized, gamma=1.5)
 
+        median = ski.filters.median(image_gray)
+        threshold_value = ski.filters.threshold_otsu(median)
+        otsu_filtered_image = median <= threshold_value     
+
+       
         # Mostrar resultados
         plt.figure()
 
@@ -39,13 +44,18 @@ def main():
             fontsize=14,
         )
 
-        plt.subplot(2, 3, 1)
+        plt.subplot(1, 3, 1)
         plt.imshow(image, cmap=plt.cm.gray)
         plt.title("Original")
 
-        plt.subplot(2, 3, 2)
+        plt.subplot(1, 3, 2)
         plt.imshow(median_filtered, cmap=plt.cm.gray)
         plt.title("Gamma 1.5")
+
+        plt.subplot(1, 3, 3)
+        plt.imshow(otsu_filtered_image, cmap=plt.cm.gray)
+        plt.title("Bordes")
+
 
 
     plt.show()

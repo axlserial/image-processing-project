@@ -40,6 +40,13 @@ def main():
         # Filtro
         sobel_filtered = ski.filters.sobel(ski.filters.median(equalized))
 
+
+        median = ski.filters.median(image_gray)
+        threshold_value = ski.filters.threshold_otsu(median)
+        otsu_filtered_image = median <= threshold_value     
+
+       
+
         # Mostrar resultados
         plt.figure()
 
@@ -68,6 +75,10 @@ def main():
         plt.subplot(2, 3, 5)
         plt.imshow(max_filtered, cmap=plt.cm.gray)
         plt.title("Maximo")
+
+        plt.subplot(2, 3, 6)
+        plt.imshow(otsu_filtered_image, cmap=plt.cm.gray)
+        plt.title("Bordes")
 
     plt.show()
 

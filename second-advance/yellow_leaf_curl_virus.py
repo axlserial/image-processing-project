@@ -26,7 +26,7 @@ def main():
         image_gray = ski.color.rgb2gray(image)
         #image_gray = ski.util.img_as_ubyte(image_gray)
 
-        edge = ski.feature.canny(image_gray)
+        canny = ski.feature.canny(image_gray)
         equalized = ski.exposure.equalize_hist(image_gray)
 
         median_filtered = ski.exposure.adjust_gamma(equalized, gamma=2)
@@ -39,6 +39,13 @@ def main():
 
         th = ski.filters.threshold_otsu(image_gray)
         b = image_gray > th
+
+
+        median = ski.filters.median(image_gray)
+        threshold_value = ski.filters.threshold_otsu(median)
+        otsu_filtered_image = median <= threshold_value     
+
+        
 
         # Mostrar resultados
         plt.figure()
@@ -63,8 +70,12 @@ def main():
 
 
         plt.subplot(2, 3, 4)
-        plt.imshow(edge, cmap=plt.cm.gray)
-        plt.title("TH")
+        plt.imshow(canny, cmap=plt.cm.gray)
+        plt.title("Canny")
+
+        plt.subplot(2, 3, 5)
+        plt.imshow(otsu_filtered_image, cmap=plt.cm.gray)
+        plt.title("Bordes")
 
 
 

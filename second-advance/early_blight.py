@@ -37,6 +37,10 @@ def main():
         edges = filters.prewitt(img_smooth)
 
 
+        median = ski.filters.median(image_gray)
+        threshold_value = ski.filters.threshold_otsu(median)
+        otsu_filtered_image = median <= threshold_value     
+
         # Mostrar resultados
         plt.figure()
 
@@ -46,14 +50,18 @@ def main():
             fontsize=14,
         )
 
-        plt.subplot(1, 2, 1)
+        plt.subplot(1, 3, 1)
         plt.imshow(image, cmap=plt.cm.gray)
         plt.title("Original")
 
-        plt.subplot(1, 2, 2)
+        plt.subplot(1, 3, 2)
         plt.imshow(img_smooth, cmap=plt.cm.gray)
         plt.title("Gaussiano")
 
+    
+        plt.subplot(1, 3, 3)
+        plt.imshow(otsu_filtered_image, cmap=plt.cm.gray)
+        plt.title("Bordes")
 
 
 
