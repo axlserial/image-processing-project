@@ -14,11 +14,13 @@ def read_images(path: str):
 
 
 def main():
-    # Obtenemos la ruta absoluta del archivo actual
-    dir_path = path.dirname(path.realpath(__file__))
+    # Obtenemos la ruta hacia las imagenes
+    current_path = path.dirname(path.realpath(__file__))
+    parent_path = path.dirname(current_path)
+    img_path = path.join(parent_path, "images", "septoria")
 
     # Leemos las imágenes
-    images = read_images(path.join(dir_path, "imagenes"))
+    images = read_images(img_path)
 
     # Mostramos la ecualización de histograma de las imágenes
     for image, file in images:
