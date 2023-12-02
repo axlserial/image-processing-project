@@ -3,6 +3,8 @@ import skimage as ski
 import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.gridspec as gridspec
+import scipy.ndimage as ndi
+
 
 
 def read_images(path: str):
@@ -14,11 +16,13 @@ def read_images(path: str):
 
 
 def main():
-    # Obtenemos la ruta absoluta del archivo actual
-    dir_path = path.dirname(path.realpath(__file__))
+    # Obtenemos la ruta hacia las imágenes
+    current_path = path.dirname(path.realpath(__file__))
+    parent_path = path.dirname(current_path)
+    img_path = path.join(parent_path, "images", "spider_mites")
 
     # Leemos las imágenes
-    images = read_images(path.join(dir_path, "spider_mites"))
+    images = read_images(img_path)
 
     # Mostramos la ecualización de histograma de las imágenes
     for image, file in images:
@@ -32,9 +36,10 @@ def main():
 
         median = ski.filters.median(image_gray)
         threshold_value = ski.filters.threshold_otsu(median)
-        otsu_filtered_image = median <= threshold_value     
+        otsu_filtered_image = median <= threshold_value   
 
-       
+        canny = ski.feature.canny(image_gray, sigma=3, mode='mirror')
+
         # Mostrar resultados
         plt.figure()
 
@@ -44,18 +49,17 @@ def main():
             fontsize=14,
         )
 
-        plt.subplot(1, 3, 1)
-        plt.imshow(image, cmap=plt.cm.gray)
-        plt.title("Original")
+        plt.subplot(2, 3, 1)
+        plt.imshow(canny, cmap=plt.cm.gray)
+        plt.title("canny")
 
-        plt.subplot(1, 3, 2)
+        plt.subplot(2, 3, 2)
         plt.imshow(median_filtered, cmap=plt.cm.gray)
         plt.title("Gamma 1.5")
 
-        plt.subplot(1, 3, 3)
+        plt.subplot(2, 3, 3)
         plt.imshow(otsu_filtered_image, cmap=plt.cm.gray)
-        plt.title("Bordes")
-
+        plt.title("Otsu")
 
 
     plt.show()

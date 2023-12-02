@@ -54,6 +54,8 @@ def main():
         erode = ski.morphology.binary_erosion(clear)
         
         mask = np.logical_and(dilate, ~erode)
+
+        canny = ski.feature.canny(image_gray, sigma=2.5)
         
 
         # Mostrar resultados
@@ -65,19 +67,21 @@ def main():
             fontsize=14,
         )
 
-        plt.subplot(1, 3, 1)
+        plt.subplot(2, 3, 1)
         plt.imshow(image_gray, cmap=plt.cm.gray)
         plt.title("Original")
 
-        plt.subplot(1, 3, 2)
+        plt.subplot(2, 3, 2)
         plt.imshow(image, cmap=plt.cm.gray)
         plt.title("Enhance contrast percentile")
 
-        plt.subplot(1, 3, 3)
-        plt.imshow(smooth, cmap=plt.cm.gray)
-        plt.title("Gaussian")
+        plt.subplot(2, 3, 3)
+        plt.imshow(mask, cmap=plt.cm.gray)
+        plt.title("Bordes")
 
-       
+        plt.subplot(2, 3, 4)
+        plt.imshow(canny, cmap=plt.cm.gray)
+        plt.title("canny")
 
         # plt.subplot(1, 3, 3)
         # plt.imshow(otsu_filtered_image, cmap=plt.cm.gray)

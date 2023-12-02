@@ -14,11 +14,13 @@ def read_images(path: str):
 
 
 def main():
-    # Obtenemos la ruta absoluta del archivo actual
-    dir_path = path.dirname(path.realpath(__file__))
+    # Obtenemos la ruta hacia las imágenes
+    current_path = path.dirname(path.realpath(__file__))
+    parent_path = path.dirname(current_path)
+    img_path = path.join(parent_path, "images", "yellow_leaf_curl_virus")
 
     # Leemos las imágenes
-    images = read_images(path.join(dir_path, "yellow_leaf_curl_virus"))
+    images = read_images(img_path)
 
     # Mostramos la ecualización de histograma de las imágenes
     for image, file in images:
@@ -26,7 +28,7 @@ def main():
         image_gray = ski.color.rgb2gray(image)
         #image_gray = ski.util.img_as_ubyte(image_gray)
 
-        canny = ski.feature.canny(image_gray)
+        canny = ski.feature.canny(image_gray, sigma=1.5)
         equalized = ski.exposure.equalize_hist(image_gray)
 
         median_filtered = ski.exposure.adjust_gamma(equalized, gamma=2)
@@ -35,10 +37,6 @@ def main():
 
         # Filtro
         sobel_filtered = ski.filters.sobel(ski.filters.median(image_filtered))
-
-
-        th = ski.filters.threshold_otsu(image_gray)
-        b = image_gray > th
 
 
         median = ski.filters.median(image_gray)
@@ -75,7 +73,7 @@ def main():
 
         plt.subplot(2, 3, 5)
         plt.imshow(otsu_filtered_image, cmap=plt.cm.gray)
-        plt.title("Bordes")
+        plt.title("Otsu")
 
 
 

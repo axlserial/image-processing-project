@@ -3,6 +3,8 @@ import skimage as ski
 import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.gridspec as gridspec
+import scipy.ndimage as ndi
+
 
 
 def read_images(path: str):
@@ -39,8 +41,15 @@ def main():
         # Filtro para reducir sal (minimo)
         min_filtered = ski.filters.rank.minimum(image_gray, ski.morphology.disk(3))
 
+        
         # Filtro
-        sobel_filtered = ski.filters.sobel(ski.filters.median(equalized))
+        sobel_filtered = ski.filters.sobel(ski.filters.median(median_filtered))
+
+        threshold_value = ski.filters.threshold_otsu(median_filtered)
+        otsu_filtered_image = median_filtered <= threshold_value    
+
+        canny = ski.feature.canny(image_gray, sigma=1.5, mode='mirror')
+
 
         # Mostrar resultados
         plt.figure()
@@ -68,8 +77,14 @@ def main():
         plt.title("Minimo")
 
         plt.subplot(2, 3, 5)
-        plt.imshow(max_filtered, cmap=plt.cm.gray)
-        plt.title("Maximo")
+        plt.imshow(otsu_filtered_image, cmap=plt.cm.gray)
+        plt.title("Otsu")
+
+        plt.subplot(2, 3, 6)
+        plt.imshow(canny, cmap=plt.cm.gray)
+        plt.title("Canny")
+
+        
 
     plt.show()
 

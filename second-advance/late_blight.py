@@ -3,6 +3,8 @@ import skimage as ski
 import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.gridspec as gridspec
+import scipy.ndimage as ndi
+
 
 
 def read_images(path: str):
@@ -42,6 +44,12 @@ def main():
         # Filtro
         sobel_filtered = ski.filters.sobel(ski.filters.median(equalized))
 
+        median = ski.filters.median(image_gray)
+        threshold_value = ski.filters.threshold_otsu(median)
+        otsu_filtered_image = median <= threshold_value
+
+        canny = ski.feature.canny(image_gray, sigma=3)
+
         # Mostrar resultados
         plt.figure()
 
@@ -60,17 +68,16 @@ def main():
         plt.title("Mediana")
 
         plt.subplot(2, 3, 3)
-        plt.imshow(sobel_filtered, cmap=plt.cm.gray)
-        plt.title("Sobel")
+        plt.imshow(otsu_filtered_image, cmap=plt.cm.gray)
+        plt.title("Otsu")
 
         plt.subplot(2, 3, 4)
         plt.imshow(min_filtered, cmap=plt.cm.gray)
         plt.title("Minimo")
 
         plt.subplot(2, 3, 5)
-        plt.imshow(max_filtered, cmap=plt.cm.gray)
-        plt.title("Maximo")
-
+        plt.imshow(canny, cmap=plt.cm.gray)
+        plt.title("Canny")
     plt.show()
 
 

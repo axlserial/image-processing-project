@@ -16,11 +16,12 @@ def read_images(path: str):
 
 def main():
     # Obtenemos la ruta absoluta del archivo actual
-    dir_path = path.dirname(path.realpath(__file__))
-
+    current_path = path.dirname(path.realpath(__file__))
+    parent_path = path.dirname(current_path)
+    img_path = path.join(parent_path, "images", "early_blight")
 
     # Leemos las imágenes
-    images = read_images(path.join(dir_path, "early_blight"))
+    images = read_images(img_path)
 
     # Mostramos la ecualización de histograma de las imágenes
     for image, file in images:
@@ -39,7 +40,10 @@ def main():
 
         median = ski.filters.median(image_gray)
         threshold_value = ski.filters.threshold_otsu(median)
-        otsu_filtered_image = median <= threshold_value     
+        otsu_filtered_image = median <= threshold_value   
+
+        canny = ski.feature.canny(image_gray, sigma=2)
+  
 
         # Mostrar resultados
         plt.figure()
@@ -51,8 +55,8 @@ def main():
         )
 
         plt.subplot(1, 3, 1)
-        plt.imshow(image, cmap=plt.cm.gray)
-        plt.title("Original")
+        plt.imshow(canny, cmap=plt.cm.gray)
+        plt.title("Canny")
 
         plt.subplot(1, 3, 2)
         plt.imshow(img_smooth, cmap=plt.cm.gray)
@@ -61,7 +65,7 @@ def main():
     
         plt.subplot(1, 3, 3)
         plt.imshow(otsu_filtered_image, cmap=plt.cm.gray)
-        plt.title("Bordes")
+        plt.title("Otsu")
 
 
 
