@@ -3,6 +3,7 @@ import skimage as ski
 import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.gridspec as gridspec
+import scipy.ndimage as ndi
 
 
 def read_images(path: str):
@@ -14,27 +15,46 @@ def read_images(path: str):
 
 
 def main():
-    # Obtenemos la ruta absoluta del archivo actual
-    dir_path = path.dirname(path.realpath(__file__))
+    
+    # Obtenemos la ruta hacia las imágenes
+    current_path = path.dirname(path.realpath(__file__))
+    parent_path = path.dirname(current_path)
+    img_path = path.join(parent_path, "images", "leaf_mold")
 
     # Leemos las imágenes
-    images = read_images(path.join(dir_path, "leaf_mold"))
+    images = read_images(img_path)
 
     # Mostramos la ecualización de histograma de las imágenes
     for image, file in images:
         # Convertimos la imagen a escala de grises
         image_gray = ski.color.rgb2gray(image)
-        #image_gray = ski.util.img_as_ubyte(image_gray)
+        
+        image_gray_byte = ski.util.img_as_ubyte(image_gray)
+        
+        grad = ski.filters.rank.enhance_contrast_percentile(image_gray_byte, ski.morphology.disk(8),p0=.15, p1=.85)
 
-        gauss = ski.filters.gaussian(image_gray,sigma=2.0)
+        image = ski.util.img_as_float64(grad)
+        # gauss = ski.filters.gaussian(image_gray,sigma=3, mode = 'reflect', preserve_range = True)
+        smooth = ski.filters.gaussian(image,sigma=5.5, mode = 'mirror', preserve_range = True)
 
-        # Filtro para reducir sal y pimienta (mediana)
-        median_filtered = ski.exposure.adjust_gamma(gauss, gamma=1.5)
+        # # Filtro para reducir sal y pimienta (mediana)
+        # median_filtered = ski.exposure.adjust_gamma(gauss, gamma=1.5)
 
-        median = ski.filters.median(image_gray)
-        threshold_value = ski.filters.threshold_otsu(median)
-        otsu_filtered_image = median <= threshold_value        
+        # median = ski.filters.median(image_gray)
+        # threshold_value = ski.filters.threshold_otsu(median)
+        # otsu_filtered_image = median <= threshold_value        
 
+        thresh_value = ski.filters.threshold_sauvola(smooth, window_size=899, k=0.099)
+        thresh = smooth <= thresh_value
+
+        fill = ndi.binary_fill_holes(thresh)
+        clear = ski.segmentation.clear_border(fill)
+
+        dilate = ski.morphology.binary_dilation(clear)
+        erode = ski.morphology.binary_erosion(clear)
+        
+        mask = np.logical_and(dilate, ~erode)
+        
 
         # Mostrar resultados
         plt.figure()
@@ -46,16 +66,22 @@ def main():
         )
 
         plt.subplot(1, 3, 1)
-        plt.imshow(image, cmap=plt.cm.gray)
+        plt.imshow(image_gray, cmap=plt.cm.gray)
         plt.title("Original")
 
         plt.subplot(1, 3, 2)
-        plt.imshow(median_filtered, cmap=plt.cm.gray)
-        plt.title("Gamma 1.5")
+        plt.imshow(image, cmap=plt.cm.gray)
+        plt.title("Enhance contrast percentile")
 
         plt.subplot(1, 3, 3)
-        plt.imshow(otsu_filtered_image, cmap=plt.cm.gray)
-        plt.title("Bordes")
+        plt.imshow(smooth, cmap=plt.cm.gray)
+        plt.title("Gaussian")
+
+       
+
+        # plt.subplot(1, 3, 3)
+        # plt.imshow(otsu_filtered_image, cmap=plt.cm.gray)
+        # plt.title("Bordes")
 
 
     plt.show()
