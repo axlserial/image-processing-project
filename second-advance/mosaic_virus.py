@@ -44,9 +44,9 @@ def main():
 
         median = ski.filters.median(image_gray)
         # Filtro
-        sobel_filtered = ski.filters.sobel(ski.filters.median(median))
+        #sobel_filtered = ski.filters.sobel(ski.filters.median(median))
 
-        canny = ski.feature.canny(image_gray, sigma=3)
+        canny = ski.feature.canny(median, sigma=3)
 
 
         #r = image[:, :, 0]
@@ -87,20 +87,24 @@ def main():
         plt.title("Original")
 
         plt.subplot(2, 3, 2)
-        plt.imshow(median_filtered, cmap=plt.cm.gray)
+        plt.imshow(median, cmap=plt.cm.gray)
         plt.title("Mediana")
-
-        plt.subplot(2, 3, 4)
-        plt.imshow(min_filtered, cmap=plt.cm.gray)
-        plt.title("Minimo")
-
-        plt.subplot(2, 3, 5)
-        plt.imshow(mask, cmap=plt.cm.gray)
-        plt.title("Bordes")
 
         plt.subplot(2, 3, 3)
         plt.imshow(canny, cmap=plt.cm.gray)
-        plt.title("Canny")
+        plt.title("Canny sigma 3")
+
+        plt.subplot(2, 3, 4)
+        plt.imshow(grad, cmap=plt.cm.gray)
+        plt.title("Mejora contraste percentil")
+
+        plt.subplot(2, 3, 5)
+        plt.imshow(smooth, cmap=plt.cm.gray)
+        plt.title("Gaussiano")
+
+        plt.subplot(2, 3, 6)
+        plt.imshow(mask, cmap=plt.cm.gray)
+        plt.title("Umbral Sauvola")
 
     plt.show()
 

@@ -32,7 +32,7 @@ def main():
 
         equalized = ski.exposure.equalize_hist(image_gray)
 
-        median_filtered = ski.exposure.adjust_gamma(equalized, gamma=1.5)
+        #median_filtered = ski.exposure.adjust_gamma(equalized, gamma=1.5)
 
         median = ski.filters.median(image_gray)
         threshold_value = ski.filters.threshold_otsu(median)
@@ -49,17 +49,21 @@ def main():
             fontsize=14,
         )
 
-        plt.subplot(2, 3, 1)
+        plt.subplot(2, 2, 1)
+        plt.imshow(image, cmap=plt.cm.gray)
+        plt.title("Original")
+
+        plt.subplot(2, 2, 2)
+        plt.imshow(median, cmap=plt.cm.gray)
+        plt.title("Mediana")
+
+        plt.subplot(2, 2, 3)
         plt.imshow(canny, cmap=plt.cm.gray)
-        plt.title("canny")
+        plt.title("Canny con sigma 3")
 
-        plt.subplot(2, 3, 2)
-        plt.imshow(median_filtered, cmap=plt.cm.gray)
-        plt.title("Gamma 1.5")
-
-        plt.subplot(2, 3, 3)
+        plt.subplot(2, 2, 4)
         plt.imshow(otsu_filtered_image, cmap=plt.cm.gray)
-        plt.title("Otsu")
+        plt.title("Umbral Otsu")
 
 
     plt.show()

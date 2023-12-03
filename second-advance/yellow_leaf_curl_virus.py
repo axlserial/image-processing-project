@@ -28,7 +28,6 @@ def main():
         image_gray = ski.color.rgb2gray(image)
         #image_gray = ski.util.img_as_ubyte(image_gray)
 
-        canny = ski.feature.canny(image_gray, sigma=1.5)
         equalized = ski.exposure.equalize_hist(image_gray)
 
         median_filtered = ski.exposure.adjust_gamma(equalized, gamma=2)
@@ -36,16 +35,17 @@ def main():
         image_filtered = ski.filters.median(median_filtered)
 
         # Filtro
-        sobel_filtered = ski.filters.sobel(ski.filters.median(image_filtered))
+        sobel_filtered = ski.filters.sobel(image_filtered)
 
 
         median = ski.filters.median(image_gray)
         threshold_value = ski.filters.threshold_otsu(median)
         otsu_filtered_image = median <= threshold_value     
 
+        canny = ski.feature.canny(image_gray, sigma=1.5)
         
 
-        # Mostrar resultados
+        # Mostrar resultados Preprocesamiento
         plt.figure()
 
         plt.suptitle(
@@ -60,20 +60,24 @@ def main():
 
         plt.subplot(2, 3, 2)
         plt.imshow(median_filtered, cmap=plt.cm.gray)
-        plt.title("Gamma 1.5")
+        plt.title("Gamma 2")
 
         plt.subplot(2, 3, 3)
+        plt.imshow(image_filtered, cmap=plt.cm.gray)
+        plt.title("Mediana de Gamma 2")
+
+        # Segmentación
+        plt.subplot(2, 3, 4)
         plt.imshow(sobel_filtered, cmap=plt.cm.gray)
         plt.title("Sobel")
 
-
-        plt.subplot(2, 3, 4)
-        plt.imshow(canny, cmap=plt.cm.gray)
-        plt.title("Canny")
-
         plt.subplot(2, 3, 5)
+        plt.imshow(canny, cmap=plt.cm.gray)
+        plt.title("Canny sigma 1.5")
+
+        plt.subplot(2, 3, 6)
         plt.imshow(otsu_filtered_image, cmap=plt.cm.gray)
-        plt.title("Otsu")
+        plt.title("Umbral Otsu")
 
 
 

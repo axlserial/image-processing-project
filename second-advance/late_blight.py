@@ -41,8 +41,6 @@ def main():
         # Filtro para reducir sal (minimo)
         min_filtered = ski.filters.rank.minimum(image_gray, ski.morphology.disk(3))
 
-        # Filtro
-        sobel_filtered = ski.filters.sobel(ski.filters.median(equalized))
 
         median = ski.filters.median(image_gray)
         threshold_value = ski.filters.threshold_otsu(median)
@@ -69,11 +67,7 @@ def main():
 
         plt.subplot(2, 3, 3)
         plt.imshow(otsu_filtered_image, cmap=plt.cm.gray)
-        plt.title("Otsu")
-
-        plt.subplot(2, 3, 4)
-        plt.imshow(min_filtered, cmap=plt.cm.gray)
-        plt.title("Minimo")
+        plt.title("Umbral Otsu")
 
         plt.subplot(2, 3, 5)
         plt.imshow(canny, cmap=plt.cm.gray)

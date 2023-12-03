@@ -34,15 +34,9 @@ def main():
         grad = ski.filters.rank.enhance_contrast_percentile(image_gray_byte, ski.morphology.disk(8),p0=.15, p1=.85)
 
         image = ski.util.img_as_float64(grad)
-        # gauss = ski.filters.gaussian(image_gray,sigma=3, mode = 'reflect', preserve_range = True)
-        smooth = ski.filters.gaussian(image,sigma=5.5, mode = 'mirror', preserve_range = True)
+       
+        smooth = ski.filters.gaussian(image,sigma=5.5, mode = 'mirror', preserve_range = True)       
 
-        # # Filtro para reducir sal y pimienta (mediana)
-        # median_filtered = ski.exposure.adjust_gamma(gauss, gamma=1.5)
-
-        # median = ski.filters.median(image_gray)
-        # threshold_value = ski.filters.threshold_otsu(median)
-        # otsu_filtered_image = median <= threshold_value        
 
         thresh_value = ski.filters.threshold_sauvola(smooth, window_size=899, k=0.099)
         thresh = smooth <= thresh_value
@@ -77,11 +71,11 @@ def main():
 
         plt.subplot(2, 3, 3)
         plt.imshow(mask, cmap=plt.cm.gray)
-        plt.title("Bordes")
+        plt.title("Umbral de Sauvola")
 
         plt.subplot(2, 3, 4)
         plt.imshow(canny, cmap=plt.cm.gray)
-        plt.title("canny")
+        plt.title("Canny")
 
         # plt.subplot(1, 3, 3)
         # plt.imshow(otsu_filtered_image, cmap=plt.cm.gray)

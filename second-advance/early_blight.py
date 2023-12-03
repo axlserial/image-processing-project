@@ -38,7 +38,7 @@ def main():
         edges = filters.prewitt(img_smooth)
 
 
-        median = ski.filters.median(image_gray)
+        median = ski.filters.median(img_smooth)
         threshold_value = ski.filters.threshold_otsu(median)
         otsu_filtered_image = median <= threshold_value   
 
@@ -54,19 +54,25 @@ def main():
             fontsize=14,
         )
 
-        plt.subplot(1, 3, 1)
-        plt.imshow(canny, cmap=plt.cm.gray)
-        plt.title("Canny")
+        plt.subplot(2, 3, 1)
+        plt.imshow(image, cmap=plt.cm.gray)
+        plt.title("Original")
 
-        plt.subplot(1, 3, 2)
+        plt.subplot(2, 3, 2)
         plt.imshow(img_smooth, cmap=plt.cm.gray)
-        plt.title("Gaussiano")
+        plt.title("Gaussiano, sigma 2")
 
-    
-        plt.subplot(1, 3, 3)
+        plt.subplot(2, 3, 3)
+        plt.imshow(median, cmap=plt.cm.gray)
+        plt.title("Mediana")
+
+        plt.subplot(2, 3, 4)
         plt.imshow(otsu_filtered_image, cmap=plt.cm.gray)
-        plt.title("Otsu")
+        plt.title("Umbral Otsu")
 
+        plt.subplot(2, 3, 5)
+        plt.imshow(canny, cmap=plt.cm.gray)
+        plt.title("Canny, sigma = 2")
 
 
     plt.show()

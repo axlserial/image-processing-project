@@ -30,23 +30,23 @@ def main():
         image_gray = ski.color.rgb2gray(image)
         image_gray = ski.util.img_as_ubyte(image_gray)
 
-        equalized = ski.exposure.equalize_hist(image_gray)
+        #equalized = ski.exposure.equalize_hist(image_gray)
 
         # Filtro para reducir sal y pimienta (mediana)
         median_filtered = ski.filters.median(image_gray)
 
         # Filtro para reducir pimienta (maximo)
-        max_filtered = ski.filters.rank.maximum(image_gray, ski.morphology.disk(3))
+        max_filtered = ski.filters.rank.maximum(image_gray, ski.morphology.disk(5))
 
         # Filtro para reducir sal (minimo)
         min_filtered = ski.filters.rank.minimum(image_gray, ski.morphology.disk(3))
 
         
         # Filtro
-        sobel_filtered = ski.filters.sobel(ski.filters.median(median_filtered))
+        sobel_filtered = ski.filters.sobel(median_filtered, mode='constant')
 
         threshold_value = ski.filters.threshold_otsu(median_filtered)
-        otsu_filtered_image = median_filtered <= threshold_value    
+        otsu_filtered_image = median_filtered <= threshold_value        
 
         canny = ski.feature.canny(image_gray, sigma=1.5, mode='mirror')
 
@@ -68,21 +68,17 @@ def main():
         plt.imshow(median_filtered, cmap=plt.cm.gray)
         plt.title("Mediana")
 
-        plt.subplot(2, 3, 3)
+        plt.subplot(2, 3, 4)
         plt.imshow(sobel_filtered, cmap=plt.cm.gray)
         plt.title("Sobel")
 
-        plt.subplot(2, 3, 4)
-        plt.imshow(min_filtered, cmap=plt.cm.gray)
-        plt.title("Minimo")
-
         plt.subplot(2, 3, 5)
         plt.imshow(otsu_filtered_image, cmap=plt.cm.gray)
-        plt.title("Otsu")
+        plt.title("Umbral Otsu")
 
         plt.subplot(2, 3, 6)
         plt.imshow(canny, cmap=plt.cm.gray)
-        plt.title("Canny")
+        plt.title("Canny sigma 1.5")
 
         
 

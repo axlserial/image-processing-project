@@ -33,7 +33,7 @@ def main():
         # Filtro para reducir sal y pimienta (mediana)
         median_filtered = ski.filters.median(image_gray)
 
-        th_otsu = ski.filters.threshold_otsu(image_gray)
+        th_otsu = ski.filters.threshold_otsu(median_filtered)
         borde = image_gray > th_otsu 
 
         median = ski.filters.median(image_gray)
@@ -65,7 +65,7 @@ def main():
 
         plt.subplot(2, 3, 4)
         plt.imshow(otsu_filtered_image, cmap=plt.cm.gray)
-        plt.title("Bordes con mediana")
+        plt.title("Umbral Otsu")
 
         plt.subplot(2, 3, 5)
         plt.imshow(canny, cmap=plt.cm.gray)
