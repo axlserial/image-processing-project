@@ -56,9 +56,9 @@ def main():
 
         grad = ski.filters.rank.enhance_contrast_percentile(image_gray, ski.morphology.disk(8),p0=.15, p1=.85)
 
-        image = ski.util.img_as_float64(grad)
+        image2 = ski.util.img_as_float64(grad)
         # gauss = ski.filters.gaussian(image_gray,sigma=3, mode = 'reflect', preserve_range = True)
-        smooth = ski.filters.gaussian(image,sigma=5.5, mode = 'mirror', preserve_range = True)
+        smooth = ski.filters.gaussian(image2,sigma=5.5, mode = 'mirror', preserve_range = True)
       
 
         thresh_value = ski.filters.threshold_sauvola(smooth, window_size=899, k=0.099)

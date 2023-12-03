@@ -33,9 +33,9 @@ def main():
         
         grad = ski.filters.rank.enhance_contrast_percentile(image_gray_byte, ski.morphology.disk(8),p0=.15, p1=.85)
 
-        image = ski.util.img_as_float64(grad)
+        image2 = ski.util.img_as_float64(grad)
        
-        smooth = ski.filters.gaussian(image,sigma=5.5, mode = 'mirror', preserve_range = True)       
+        smooth = ski.filters.gaussian(image2,sigma=5.5, mode = 'mirror', preserve_range = True)       
 
 
         thresh_value = ski.filters.threshold_sauvola(smooth, window_size=899, k=0.099)
@@ -62,11 +62,11 @@ def main():
         )
 
         plt.subplot(2, 3, 1)
-        plt.imshow(image_gray, cmap=plt.cm.gray)
+        plt.imshow(image, cmap=plt.cm.gray)
         plt.title("Original")
 
         plt.subplot(2, 3, 2)
-        plt.imshow(image, cmap=plt.cm.gray)
+        plt.imshow(image2, cmap=plt.cm.gray)
         plt.title("Enhance contrast percentile")
 
         # Segmentación
