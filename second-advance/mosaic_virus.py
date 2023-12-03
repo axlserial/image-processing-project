@@ -91,16 +91,17 @@ def main():
         plt.title("Mediana")
 
         plt.subplot(2, 3, 3)
-        plt.imshow(canny, cmap=plt.cm.gray)
-        plt.title("Canny sigma 3")
-
-        plt.subplot(2, 3, 4)
         plt.imshow(grad, cmap=plt.cm.gray)
         plt.title("Mejora contraste percentil")
 
-        plt.subplot(2, 3, 5)
+        plt.subplot(2, 3, 4)
         plt.imshow(smooth, cmap=plt.cm.gray)
         plt.title("Gaussiano")
+        
+        # Segmentación
+        plt.subplot(2, 3, 5)
+        plt.imshow(canny, cmap=plt.cm.gray)
+        plt.title("Canny sigma 3")
 
         plt.subplot(2, 3, 6)
         plt.imshow(mask, cmap=plt.cm.gray)

@@ -65,6 +65,7 @@ def main():
         plt.imshow(median_filtered, cmap=plt.cm.gray)
         plt.title("Mediana")
 
+        # Segmentación
         plt.subplot(2, 3, 3)
         plt.imshow(otsu_filtered_image, cmap=plt.cm.gray)
         plt.title("Umbral Otsu")

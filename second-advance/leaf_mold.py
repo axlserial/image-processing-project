@@ -69,6 +69,7 @@ def main():
         plt.imshow(image, cmap=plt.cm.gray)
         plt.title("Enhance contrast percentile")
 
+        # Segmentación
         plt.subplot(2, 3, 3)
         plt.imshow(mask, cmap=plt.cm.gray)
         plt.title("Umbral de Sauvola")

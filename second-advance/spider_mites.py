@@ -57,6 +57,7 @@ def main():
         plt.imshow(median, cmap=plt.cm.gray)
         plt.title("Mediana")
 
+        # Segmentación
         plt.subplot(2, 2, 3)
         plt.imshow(canny, cmap=plt.cm.gray)
         plt.title("Canny con sigma 3")
