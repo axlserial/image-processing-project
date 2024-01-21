@@ -15,11 +15,12 @@ def read_images(path: str):
 
 def main():
     # Obtenemos la ruta absoluta del archivo actual
-    dir_path = path.dirname(path.realpath(__file__))
-
+    current_path = path.dirname(path.realpath(__file__))
+    parent_path = path.dirname(current_path)
+    img_path = path.join(parent_path, "images", "yellow_leaf_curl_virus")
 
     # Leemos las imágenes
-    images = read_images(path.join(dir_path, "yellow_leaf_curl_virus"))
+    images = read_images(img_path)
 
 
     # Mostramos la ecualización de histograma de las imágenes
@@ -44,6 +45,10 @@ def main():
 
         canny = ski.feature.canny(image_gray, sigma=1.5)
 
+        # Umbralización global, isodata
+        isodata_threshold = ski.filters.threshold_isodata(image_gray)
+        isodata_filtered_image = image_gray <= isodata_threshold
+
 
         #Multiple de otsu
             #Obtener los umbrales óptimos
@@ -58,7 +63,10 @@ def main():
                 regions[(image_gray >= thresholds[i-1]) & (image_gray < threshold)] = i
             regions[image_gray >= thresholds[-1]] = i+1
 
-        
+        # Otsu multi b&n
+        gauss = ski.filters.gaussian(sobel_filtered,sigma=3, mode = 'mirror', preserve_range = True)
+        thres_otsu_multi = ski.filters.threshold_multiotsu(gauss, classes=3)
+        regions_bn = np.digitize(gauss, bins=thres_otsu_multi)
         
 
         # Mostrar resultados Preprocesamiento
@@ -92,12 +100,20 @@ def main():
         plt.title("Canny sigma 1.5")
 
         plt.subplot(3, 3, 6)
+        plt.imshow(isodata_filtered_image, cmap=plt.cm.gray)
+        plt.title("Umbralización Global")
+
+        plt.subplot(3, 3, 7)
         plt.imshow(otsu_filtered_image, cmap=plt.cm.gray)
         plt.title("Umbral Otsu")
 
-        plt.subplot(3, 3, 7)
+        plt.subplot(3, 3, 8)
         plt.imshow(regions, cmap='jet')
-        plt.title("Multi-Otsu")
+        plt.title("Multi-Otsu color")
+
+        plt.subplot(3, 3, 9)
+        plt.imshow(regions_bn, cmap='binary')
+        plt.title("Multi-Otsu b&n")
 
 
 

@@ -15,12 +15,13 @@ def read_images(path: str):
 
 
 def main():
-     # Obtenemos la ruta absoluta del archivo actual
-    dir_path = path.dirname(path.realpath(__file__))
-
+    # Obtenemos la ruta absoluta del archivo actual
+    current_path = path.dirname(path.realpath(__file__))
+    parent_path = path.dirname(current_path)
+    img_path = path.join(parent_path, "images", "early_blight")
 
     # Leemos las imágenes
-    images = read_images(path.join(dir_path, "early_blight"))
+    images = read_images(img_path)
 
 
     # Mostramos la ecualización de histograma de las imágenes
@@ -44,9 +45,14 @@ def main():
 
         canny = ski.feature.canny(image_gray, sigma=2)
 
+        # Umbralización global, isodata
+        isodata_threshold = ski.filters.threshold_isodata(image_gray)
+        isodata_filtered_image = image_gray <= isodata_threshold
 
-        #Multiple de otsu
-            #Obtener los umbrales óptimos
+
+        # Multiple de otsu
+        # A color
+        # Obtener los umbrales óptimos
         thresholds = ski.filters.threshold_multiotsu(image_gray)
 
         # Aplicar los umbrales a la imagen
@@ -59,7 +65,9 @@ def main():
             regions[image_gray >= thresholds[-1]] = i+1
 
         
-  
+        # Prueba con otsu Multiple, b&n
+        thres_otsu_multi = ski.filters.threshold_multiotsu(median, classes=3)
+        regions_bn = np.digitize(median, bins=thres_otsu_multi)
 
         # Mostrar resultados
         plt.figure()
@@ -70,30 +78,39 @@ def main():
             fontsize=14,
         )
 
-        plt.subplot(2, 3, 1)
+        plt.subplot(2, 4, 1)
         plt.imshow(image, cmap=plt.cm.gray)
         plt.title("Original")
 
-        plt.subplot(2, 3, 2)
+        plt.subplot(2, 4, 2)
         plt.imshow(img_smooth, cmap=plt.cm.gray)
         plt.title("Gaussiano, sigma 2")
 
-        plt.subplot(2, 3, 3)
+        plt.subplot(2, 4, 3)
         plt.imshow(median, cmap=plt.cm.gray)
         plt.title("Mediana")
 
         # Segmentación
-        plt.subplot(2, 3, 4)
-        plt.imshow(otsu_filtered_image, cmap=plt.cm.gray)
-        plt.title("Umbral Otsu")
 
-        plt.subplot(2, 3, 5)
+        plt.subplot(2, 4, 4)
         plt.imshow(canny, cmap=plt.cm.gray)
         plt.title("Canny, sigma = 2")
 
-        plt.subplot(2, 3, 5)
+        plt.subplot(2, 4, 5)
+        plt.imshow(isodata_filtered_image, cmap=plt.cm.gray)
+        plt.title("Umbralización Global")
+
+        plt.subplot(2, 4, 6)
+        plt.imshow(otsu_filtered_image, cmap=plt.cm.gray)
+        plt.title("Umbral Otsu")
+
+        plt.subplot(2, 4, 7)
         plt.imshow(regions, cmap='jet')
-        plt.title("Multi-Otsu")
+        plt.title("Multi-Otsu color")
+
+        plt.subplot(2, 4, 8)
+        plt.imshow(regions_bn, cmap=plt.cm.binary)
+        plt.title("Multi-Otsu b&n")
 
 
     plt.show()
